@@ -88,6 +88,12 @@ public class GamePlay implements Screen{
 	{
 		player1.updateSword();
 		
+		/*
+		 * Movement Keys: W, A, D
+		 * W -> Jump
+		 * A -> Left
+		 * D -> Right
+		 */
 		if(Gdx.input.isKeyPressed(Keys.W))
 		{
 			player1.jump();
@@ -100,11 +106,16 @@ public class GamePlay implements Screen{
 		{
 			player1.moveLeft();
 		}
+		//if the 'D' and 'A' keys are NOT(!) being pressed
 		if(!Gdx.input.isKeyPressed(Keys.D) && !Gdx.input.isKeyPressed(Keys.A))
 		{
-			player1.stopXMovement();
+			player1.stopXMovement();//stop movement. stops the "sliding" effect.
 		}
-		
+		/*
+		 * if 'W' is pressed we check to see if player1 is on a ladder.  There are
+		 * 4 ladders, so 4 inner ifs.  If the player is on a ladder when the 'W' key
+		 * is pressed, we move the player up.
+		 * */
 		if(Gdx.input.isKeyPressed(Keys.W))
 		{
 			if(ladder1.getFixtureList().get(0).testPoint(player1.getBody().getPosition().x, player1.getBody().getPosition().y))
@@ -131,6 +142,9 @@ public class GamePlay implements Screen{
 	{
 		player2.updateSword();
 		
+		/*
+		 * Movement Keys: Up Arrow, Left Arrow, Right arrow
+		 */
 		if(Gdx.input.isKeyPressed(Keys.UP))
 		{
 			player2.jump();
@@ -147,7 +161,11 @@ public class GamePlay implements Screen{
 		{
 			player2.stopXMovement();
 		}
-		
+		/*
+		 * if 'W' is pressed we check to see if player2 is on a ladder.  There are
+		 * 4 ladders, so 4 inner ifs.  If the player is on a ladder when the 'W' key
+		 * is pressed, we move the player up.
+		 * */
 		if(Gdx.input.isKeyPressed(Keys.UP))
 		{
 			if(ladder1.getFixtureList().get(0).testPoint(player2.getBody().getPosition().x, player2.getBody().getPosition().y))
@@ -176,9 +194,21 @@ public class GamePlay implements Screen{
 		world = new World(new Vector2(0, -9.81f), true);
 		debugRenderer = new Box2DDebugRenderer();
 		camera = new OrthographicCamera();
+		
+		//create the players in the world at (x,y) location
 		player1 = new Player(world, -10, 1);
 		player2 = new Player(world, 10, 1);
+		
 		Body body;
+		
+		/*
+		 * link the MyContactFilter class to the world.  The world will now
+		 * check the MyContactFilter class anytime two box2d objects touch.
+		 * We can define what happens when two objects touch inside the
+		 * MyContactFilter class.  For example, the two players cannot hit
+		 * eachother, when an enemy hits the player take health away, don't
+		 * let the players own bullets hit them, etc.
+		 */
 		world.setContactFilter(new MyContactFilter());
 
 		//independent of actual use.  Re-used several times
@@ -206,61 +236,62 @@ public class GamePlay implements Screen{
 		//main bottom platform
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.scl(0,0);
-		ChainShape groundShape = new ChainShape();
-		groundShape.createChain(new Vector2[]{new Vector2(-16,-10), new Vector2(16,-10)});
+		ChainShape groundShape = new ChainShape();//ChainShapes are lines that must contain at least 2 (x,y) points but can contain many (x,y) points
+		groundShape.createChain(new Vector2[]{new Vector2(-16,-10), new Vector2(16,-10)});//create the actual line by passing the points in
 		fixtureDef.shape = groundShape;
 		fixtureDef.friction = 0.5f;
 		fixtureDef.restitution = 0;
-		
-		//world.createBody(bodyDef).createFixture(fixtureDef);
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
-		body.getFixtureList().get(0).setUserData("ground");
+		body.getFixtureList().get(0).setUserData("ground");//naming each fixture is important.  We will use this name in the MyContactFilter to see what two things are touching
 		groundShape.dispose();
 
 		//left middle platform
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.scl(0,0);
-		groundShape = new ChainShape();
-		groundShape.createChain(new Vector2[]{new Vector2(-16,-3), new Vector2(-5,-3)});
+		groundShape = new ChainShape();//ChainShapes are lines that must contain at least 2 (x,y) points but can contain many (x,y) points
+		groundShape.createChain(new Vector2[]{new Vector2(-16,-3), new Vector2(-5,-3)});//create the actual line by passing the points in
 		fixtureDef.shape = groundShape;
 		fixtureDef.friction = 0.5f;
 		fixtureDef.restitution = 0;
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
-		body.getFixtureList().get(0).setUserData("ground");
+		body.getFixtureList().get(0).setUserData("ground");//naming each fixture is important.  We will use this name in the MyContactFilter to see what two things are touching
 		groundShape.dispose();
 
 		//right middle platform
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.scl(0,0);
-		groundShape = new ChainShape();
-		groundShape.createChain(new Vector2[]{new Vector2(5,-3), new Vector2(16,-3)});
+		groundShape = new ChainShape();//ChainShapes are lines that must contain at least 2 (x,y) points but can contain many (x,y) points
+		groundShape.createChain(new Vector2[]{new Vector2(5,-3), new Vector2(16,-3)}); //create the actual line by passing the points in
 		fixtureDef.shape = groundShape;
 		fixtureDef.friction = 0.5f;
 		fixtureDef.restitution = 0;
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
-		body.getFixtureList().get(0).setUserData("ground");
+		body.getFixtureList().get(0).setUserData("ground");//naming each fixture is important.  We will use this name in the MyContactFilter to see what two things are touching
 		groundShape.dispose();
 
 		//middle platform
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.scl(0,0);
-		groundShape = new ChainShape();
-		groundShape.createChain(new Vector2[]{new Vector2(-10,4), new Vector2(10,4)});
+		groundShape = new ChainShape();//ChainShapes are lines that must contain at least 2 (x,y) points but can contain many (x,y) points
+		groundShape.createChain(new Vector2[]{new Vector2(-10,4), new Vector2(10,4)});//create the actual line by passing the points in
 		fixtureDef.shape = groundShape;
 		fixtureDef.friction = 0.5f;
 		fixtureDef.restitution = 0;
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
-		body.getFixtureList().get(0).setUserData("ground");
+		body.getFixtureList().get(0).setUserData("ground");//naming each fixture is important.  We will use this name in the MyContactFilter to see what two things are touching
 		groundShape.dispose();
 		
+		//create the ladders by calling helper methods that create each one
 		createLadder1();
 		createLadder2();
 		createLadder3();
 		createLadder4();
+		
+		//create the wonder box by calling a helper method that creates it for us
 		createWonderBox();
 	}
 	
@@ -271,6 +302,12 @@ public class GamePlay implements Screen{
 		Body body;
 		
 		bodyDef.type = BodyType.StaticBody;
+		/*
+		 * PolygonShape makes a polygon
+		 * Always create a PolygonShape with one more point than the number of sides you want.
+		 * For example, a triangle will have 4 points, a square 5 points, a hexagon 7 points, etc.
+		 * Always make sure the last point is the same as the first point in order to "close" the shape off
+		 */
 		PolygonShape rectangle = new PolygonShape();
 		rectangle.set(new Vector2[]{new Vector2(-3,0),
 									new Vector2(3,0),
@@ -280,7 +317,7 @@ public class GamePlay implements Screen{
 		fixtureDef.shape = rectangle;
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
-		body.getFixtureList().get(0).setUserData("wonder box");
+		body.getFixtureList().get(0).setUserData("wonder box");//naming each fixture is important.  We will use this name in the MyContactFilter to see what two things are touching
 		rectangle.dispose();
 	}
 	
@@ -290,7 +327,14 @@ public class GamePlay implements Screen{
 		FixtureDef fixtureDef = new FixtureDef();
 		
 		bodyDef.type = BodyType.KinematicBody;
+		/*
+		 * PolygonShape makes a polygon
+		 * Always create a PolygonShape with one more point than the number of sides you want.
+		 * For example, a triangle will have 4 points, a square 5 points, a hexagon 7 points, etc.
+		 * Always make sure the last point is the same as the first point in order to "close" the shape off
+		 */
 		PolygonShape rectangle = new PolygonShape();
+		//width=1, height=7 for the ladder dimensions
 		rectangle.set(new Vector2[]{new Vector2(-7,-3f),
 									new Vector2(-6,-3f),
 									new Vector2(-6,-10),
@@ -300,7 +344,7 @@ public class GamePlay implements Screen{
 		fixtureDef.filter.groupIndex = 1;
 		ladder1 = world.createBody(bodyDef);
 		ladder1.createFixture(fixtureDef);
-		ladder1.getFixtureList().get(0).setUserData("ladder");
+		ladder1.getFixtureList().get(0).setUserData("ladder");//naming each fixture is important.  We will use this name in the MyContactFilter to see what two things are touching
 		rectangle.dispose();
 	}
 	
@@ -310,7 +354,14 @@ public class GamePlay implements Screen{
 		FixtureDef fixtureDef = new FixtureDef();
 		
 		bodyDef.type = BodyType.KinematicBody;
+		/*
+		 * PolygonShape makes a polygon
+		 * Always create a PolygonShape with one more point than the number of sides you want.
+		 * For example, a triangle will have 4 points, a square 5 points, a hexagon 7 points, etc.
+		 * Always make sure the last point is the same as the first point in order to "close" the shape off
+		 */
 		PolygonShape rectangle = new PolygonShape();
+		//width=1, height=7 for the ladder dimensions
 		rectangle.set(new Vector2[]{new Vector2(7,-3f),
 									new Vector2(6,-3f),
 									new Vector2(6,-10),
@@ -320,7 +371,7 @@ public class GamePlay implements Screen{
 		fixtureDef.filter.groupIndex = 1;
 		ladder2 = world.createBody(bodyDef);
 		ladder2.createFixture(fixtureDef);
-		ladder2.getFixtureList().get(0).setUserData("ladder");
+		ladder2.getFixtureList().get(0).setUserData("ladder");//naming each fixture is important.  We will use this name in the MyContactFilter to see what two things are touching
 		rectangle.dispose();
 	}
 	
@@ -330,9 +381,14 @@ public class GamePlay implements Screen{
 		FixtureDef fixtureDef = new FixtureDef();
 		
 		bodyDef.type = BodyType.KinematicBody;
+		/*
+		 * PolygonShape makes a polygon
+		 * Always create a PolygonShape with one more point than the number of sides you want.
+		 * For example, a triangle will have 4 points, a square 5 points, a hexagon 7 points, etc.
+		 * Always make sure the last point is the same as the first point in order to "close" the shape off
+		 */
 		PolygonShape rectangle = new PolygonShape();
-		//width 1
-		//height is 7
+		//width=1, height=7 for the ladder dimensions
 		rectangle.set(new Vector2[]{new Vector2(-9,-3f),
 									new Vector2(-8,-3f),
 									new Vector2(-8,4),
@@ -342,7 +398,7 @@ public class GamePlay implements Screen{
 		fixtureDef.filter.groupIndex = 1;
 		ladder3 = world.createBody(bodyDef);
 		ladder3.createFixture(fixtureDef);
-		ladder3.getFixtureList().get(0).setUserData("ladder");
+		ladder3.getFixtureList().get(0).setUserData("ladder");//naming each fixture is important.  We will use this name in the MyContactFilter to see what two things are touching
 		rectangle.dispose();
 	}
 	
@@ -352,9 +408,14 @@ public class GamePlay implements Screen{
 		FixtureDef fixtureDef = new FixtureDef();
 		
 		bodyDef.type = BodyType.KinematicBody;
+		/*
+		 * PolygonShape makes a polygon
+		 * Always create a PolygonShape with one more point than the number of sides you want.
+		 * For example, a triangle will have 4 points, a square 5 points, a hexagon 7 points, etc.
+		 * Always make sure the last point is the same as the first point in order to "close" the shape off
+		 */
 		PolygonShape rectangle = new PolygonShape();
-		//width 1
-		//height is 7
+		//width=1, height=7 for the ladder dimensions
 		rectangle.set(new Vector2[]{new Vector2(9,-3f),
 									new Vector2(8,-3f),
 									new Vector2(8,4),
@@ -364,7 +425,7 @@ public class GamePlay implements Screen{
 		fixtureDef.filter.groupIndex = 1;
 		ladder4 = world.createBody(bodyDef);
 		ladder4.createFixture(fixtureDef);
-		ladder4.getFixtureList().get(0).setUserData("ladder");
+		ladder4.getFixtureList().get(0).setUserData("ladder");//naming each fixture is important.  We will use this name in the MyContactFilter to see what two things are touching
 		rectangle.dispose();
 	}
 
