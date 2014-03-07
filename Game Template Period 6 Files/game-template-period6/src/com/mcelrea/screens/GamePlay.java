@@ -86,6 +86,16 @@ public class GamePlay implements Screen{
 		
 		player1.checkCollisions(world);
 		player2.checkCollisions(world);
+		
+		updateEnemies();
+	}
+	
+	public void updateEnemies()
+	{
+		for(int i=0; i < enemies.size(); i++)
+		{
+			enemies.get(i).act();
+		}
 	}
 	
 	public void updatePlayer1()

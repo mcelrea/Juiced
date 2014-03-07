@@ -13,6 +13,7 @@ public class Enemy
 	Body myBody;
 	Fixture myFixture;
 	float speed;
+	final float MAXSPEED = 4;
 	
 	public Enemy(World world, float x, float y)
 	{
@@ -32,6 +33,12 @@ public class Enemy
 		myFixture = myBody.createFixture(fixtureDef);
 		myBody.getFixtureList().get(0).setUserData("enemy");
 		
+	}
+	
+	public void act()
+	{
+		if(myBody.getLinearVelocity().x < MAXSPEED)
+			myBody.applyLinearImpulse(2, 0, myBody.getPosition().x, myBody.getPosition().y, true);
 	}
 }
 
