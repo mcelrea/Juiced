@@ -1,5 +1,7 @@
 package com.mcelrea.screens;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -14,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mcelrea.gameTemplate.Enemy;
 import com.mcelrea.gameTemplate.MyContactFilter;
 import com.mcelrea.gameTemplate.Player;
 
@@ -24,6 +27,7 @@ public class GamePlay implements Screen{
 	
 	public static Player player1, player2;
 	Body ladder1, ladder2, ladder3, ladder4;
+	ArrayList<Enemy> enemies = new ArrayList<Enemy>();//an empty list of enemies
 
 	//draws boxes, joints, velocities, contacts, lets us debug our game
 	private Box2DDebugRenderer debugRenderer;
@@ -187,6 +191,15 @@ public class GamePlay implements Screen{
 		}
 
 	}
+	
+	public void addEnemies()
+	{
+		Enemy e = new Enemy(world, -14, 10);
+		enemies.add(e);
+		
+		e = new Enemy(world, 14, 10);
+		enemies.add(e);
+	}
 
 	@Override
 	public void show() {
@@ -198,6 +211,8 @@ public class GamePlay implements Screen{
 		//create the players in the world at (x,y) location
 		player1 = new Player(world, -10, 1);
 		player2 = new Player(world, 10, 1);
+		
+		addEnemies();
 		
 		Body body;
 		
