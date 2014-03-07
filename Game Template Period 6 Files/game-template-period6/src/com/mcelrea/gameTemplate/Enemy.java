@@ -14,6 +14,7 @@ public class Enemy
 	Fixture myFixture;
 	float speed;
 	final float MAXSPEED = 4;
+	private boolean grounded;
 	
 	public Enemy(World world, float x, float y)
 	{
@@ -33,14 +34,24 @@ public class Enemy
 		myFixture = myBody.createFixture(fixtureDef);
 		myBody.getFixtureList().get(0).setUserData("enemy");
 		
-	}
+	}//end contructor
 	
 	public void act()
 	{
-		if(myBody.getLinearVelocity().x < MAXSPEED)
+		if(grounded && myBody.getLinearVelocity().x < MAXSPEED)
 			myBody.applyLinearImpulse(2, 0, myBody.getPosition().x, myBody.getPosition().y, true);
-	}
-}
+	}//end act
+
+	public boolean isGrounded() {
+		return grounded;
+	}//end isGrounded
+
+	public void setGrounded(boolean grounded) {
+		this.grounded = grounded;
+	}//end setGrounded
+	
+	
+}//end Enemy class
 
 
 
