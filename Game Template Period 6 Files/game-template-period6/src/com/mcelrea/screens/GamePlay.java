@@ -43,6 +43,7 @@ public class GamePlay implements Screen{
 
 	SpriteBatch batch;
 	Sprite ladder1_sprite, ladder2_sprite, ladder3_sprite, ladder4_sprite;
+	Sprite topPlatform, leftPlatform, rightPlatform;
 
 	@Override
 	public void render(float delta) {
@@ -71,6 +72,7 @@ public class GamePlay implements Screen{
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+		topPlatform.draw(batch);
 		ladder1_sprite.draw(batch);
 		ladder2_sprite.draw(batch);
 		ladder3_sprite.draw(batch);
@@ -346,6 +348,10 @@ public class GamePlay implements Screen{
 		ladder4_sprite = new Sprite(new Texture("img/ladder.png"));
 		ladder4_sprite.setSize(1, 7);
 		ladder4_sprite.setPosition(6, -10);
+		
+		topPlatform = new Sprite(new Texture("img/topBrickPlatform.png"));
+		topPlatform.setSize(20, 0.5f);
+		topPlatform.setPosition(-10, 3.5f);
 		
 		
 		//create the wonder box by calling a helper method that creates it for us
