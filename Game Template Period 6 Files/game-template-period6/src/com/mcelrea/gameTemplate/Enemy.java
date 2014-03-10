@@ -27,7 +27,7 @@ public class Enemy
 		
 		bodyDef.type = BodyType.DynamicBody;
 		PolygonShape box = new PolygonShape();
-		box.setAsBox(1, 0.5f);
+		box.setAsBox(0.5f, 1);
 		bodyDef.position.x = x;
 		bodyDef.position.y = y;
 		fixtureDef.shape = box;
@@ -35,6 +35,7 @@ public class Enemy
 		fixtureDef.restitution = 0;
 		fixtureDef.friction = 0.75f;
 		myBody = world.createBody(bodyDef);
+		myBody.setFixedRotation(true);
 		myFixture = myBody.createFixture(fixtureDef);
 		id = count;
 		myBody.getFixtureList().get(0).setUserData(new EnemyFixtureData("enemy", this));
