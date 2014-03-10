@@ -7,6 +7,9 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -38,6 +41,8 @@ public class GamePlay implements Screen{
 	private final int VELOCITYITERATIONS = 8; //pretty common, makes the world stable
 	private final int POSITIONITERATIONS = 3; //pretty common, makes the world stable
 
+	SpriteBatch batch;
+	Sprite ladder1_sprite, ladder2_sprite, ladder3_sprite, ladder4_sprite;
 
 	@Override
 	public void render(float delta) {
@@ -63,6 +68,14 @@ public class GamePlay implements Screen{
 
 		//Recalculates the projection and view matrix of this camera and the Frustum planes. Use this after you've manipulated any of the attributes of the camera.
 		camera.update();
+		
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		ladder1_sprite.draw(batch);
+		ladder2_sprite.draw(batch);
+		ladder3_sprite.draw(batch);
+		ladder4_sprite.draw(batch);
+		batch.end();
 
 		//show the debug objects on the screen
 		debugRenderer.render(world, camera.combined);
@@ -217,6 +230,7 @@ public class GamePlay implements Screen{
 		world = new World(new Vector2(0, -9.81f), true);
 		debugRenderer = new Box2DDebugRenderer();
 		camera = new OrthographicCamera();
+		batch = new SpriteBatch();
 		
 		//create the players in the world at (x,y) location
 		player1 = new Player(world, -10, 1);
@@ -315,6 +329,24 @@ public class GamePlay implements Screen{
 		createLadder2();
 		createLadder3();
 		createLadder4();
+		
+		//create the ladder sprites
+		ladder1_sprite = new Sprite(new Texture("img/ladder.png"));
+		ladder1_sprite.setSize(1, 7);
+		ladder1_sprite.setPosition(-9, -3);
+		
+		ladder2_sprite = new Sprite(new Texture("img/ladder.png"));
+		ladder2_sprite.setSize(1, 7);
+		ladder2_sprite.setPosition(8, -3);
+		
+		ladder3_sprite = new Sprite(new Texture("img/ladder.png"));
+		ladder3_sprite.setSize(1, 7);
+		ladder3_sprite.setPosition(-7, -10);
+		
+		ladder4_sprite = new Sprite(new Texture("img/ladder.png"));
+		ladder4_sprite.setSize(1, 7);
+		ladder4_sprite.setPosition(6, -10);
+		
 		
 		//create the wonder box by calling a helper method that creates it for us
 		createWonderBox();
