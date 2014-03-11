@@ -43,7 +43,7 @@ public class GamePlay implements Screen{
 
 	SpriteBatch batch;
 	Sprite ladder1_sprite, ladder2_sprite, ladder3_sprite, ladder4_sprite;
-	Sprite topPlatform, leftPlatform, rightPlatform;
+	Sprite topPlatform, leftPlatform, rightPlatform, ground;
 
 	@Override
 	public void render(float delta) {
@@ -75,6 +75,7 @@ public class GamePlay implements Screen{
 		topPlatform.draw(batch);
 		leftPlatform.draw(batch);
 		rightPlatform.draw(batch);
+		ground.draw(batch);
 		ladder1_sprite.draw(batch);
 		ladder2_sprite.draw(batch);
 		ladder3_sprite.draw(batch);
@@ -82,7 +83,7 @@ public class GamePlay implements Screen{
 		batch.end();
 
 		//show the debug objects on the screen
-		debugRenderer.render(world, camera.combined);
+		//debugRenderer.render(world, camera.combined);
 	}
 
 	@Override
@@ -362,6 +363,10 @@ public class GamePlay implements Screen{
 		rightPlatform = new Sprite(new Texture("img/sideBrickPlatform.png"));
 		rightPlatform.setSize(11, 0.5f);
 		rightPlatform.setPosition(5, -3.5f);
+		
+		ground = new Sprite(new Texture("img/stoneGround.png"));
+		ground.setSize(32, 2f);
+		ground.setPosition(-16, -12f);
 		
 		
 		//create the wonder box by calling a helper method that creates it for us
