@@ -1,6 +1,9 @@
 package com.mcelrea.gameTemplate;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -21,11 +24,19 @@ public class Player
 	float speed;
 	boolean jumping;
 	float rot = 0.0f;
+	Sprite rightImage, leftImage;
+	boolean facingLeft;
 
-	public Player(World world, float x, float y)
+	public Player(World world, float x, float y, String imageFile)
 	{
 		FixtureDef fixDef = new FixtureDef();
 		BodyDef bodyDef = new BodyDef();
+		
+		rightImage = new Sprite(new Texture(imageFile));
+		rightImage.setSize(1f, 2f);
+		leftImage = new Sprite(new Texture(imageFile));
+		leftImage.flip(true, false);
+		leftImage.setSize(1f, 2f);
 
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(x, y);
@@ -74,6 +85,21 @@ public class Player
 		speed = 5;
 	}
 	
+	public void draw(SpriteBatch batch)
+	{
+		rightImage.setPosition(body.getPosition().x - rightImage.getWidth()/2,
+				               body.getPosition().y - rightImage.getHeight()/2);
+		leftImage.setPosition(body.getPosition().x - leftImage.getWidth()/2,
+		                      body.getPosition().y - leftImage.getHeight()/2);
+		
+		if(facingLeft == false)
+			rightImage.draw(batch);
+		else
+		{
+			leftImage.draw(batch);
+		}
+	}
+	
 	public void updateSword()
 	{
 		//sword follows the player
@@ -90,7 +116,7 @@ public class Player
 	public void moveRight()
 	{
 		body.setLinearVelocity(speed, body.getLinearVelocity().y);
-
+		facingLeft = false;
 		//teleport this bad boy!!!! :)
 		if(body.getPosition().x > 16)
 		{
@@ -101,7 +127,7 @@ public class Player
 	public void moveLeft()
 	{
 		body.setLinearVelocity(-speed, body.getLinearVelocity().y);
-
+		facingLeft = true;
 		//teleport this bad boy!!!! :)
 		if(body.getPosition().x < -16)
 		{

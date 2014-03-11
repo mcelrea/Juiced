@@ -80,6 +80,8 @@ public class GamePlay implements Screen{
 		ladder2_sprite.draw(batch);
 		ladder3_sprite.draw(batch);
 		ladder4_sprite.draw(batch);
+		player1.draw(batch);
+		player2.draw(batch);
 		batch.end();
 
 		//show the debug objects on the screen
@@ -238,8 +240,8 @@ public class GamePlay implements Screen{
 		batch = new SpriteBatch();
 		
 		//create the players in the world at (x,y) location
-		player1 = new Player(world, -10, 1);
-		player2 = new Player(world, 10, 1);
+		player1 = new Player(world, -10, 1, "img/player1.png");
+		player2 = new Player(world, 10, 1, "img/player2.png");
 		
 		addEnemies();
 		
