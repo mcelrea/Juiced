@@ -80,12 +80,18 @@ public class GamePlay implements Screen{
 		ladder2_sprite.draw(batch);
 		ladder3_sprite.draw(batch);
 		ladder4_sprite.draw(batch);
+		
+		for(int i=0; i < enemies.size(); i++)
+		{
+			enemies.get(i).draw(batch);
+		}
+		
 		player1.draw(batch);
 		player2.draw(batch);
 		batch.end();
 
 		//show the debug objects on the screen
-		debugRenderer.render(world, camera.combined);
+		//debugRenderer.render(world, camera.combined);
 	}
 
 	@Override
@@ -114,7 +120,7 @@ public class GamePlay implements Screen{
 	{
 		for(int i=0; i < enemies.size(); i++)
 		{
-			enemies.get(i).act();
+			enemies.get(i).act(world);
 		}
 	}
 	
