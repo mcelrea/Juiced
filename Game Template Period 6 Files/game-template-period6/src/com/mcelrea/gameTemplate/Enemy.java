@@ -45,8 +45,10 @@ public class Enemy
 	
 	public void act()
 	{
+		/*
 		if(grounded && myBody.getLinearVelocity().x < MAXSPEED)
 			myBody.applyLinearImpulse(2, 0, myBody.getPosition().x, myBody.getPosition().y, true);
+		*/
 	}//end act
 
 	public boolean isGrounded() {
