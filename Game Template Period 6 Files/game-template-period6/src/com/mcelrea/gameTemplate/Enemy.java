@@ -1,5 +1,6 @@
 package com.mcelrea.gameTemplate;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,6 +23,7 @@ public class Enemy
 	private int id;
 	private static int count=0;
 	private Sprite leftImage, rightImage;
+	private boolean facingLeft;
 	
 	Body bullet;
 	boolean bulletAlive;
@@ -30,6 +32,12 @@ public class Enemy
 	{
 		BodyDef bodyDef = new BodyDef();
 		FixtureDef fixtureDef = new FixtureDef();
+		
+		//x = 0 is the middle of the screen
+		if (x < 0)
+			facingLeft = false;
+		else
+			facingLeft = true;
 		
 		leftImage = new Sprite(new Texture("img/robot1.png"));
 		leftImage.setSize(1.4f, 1.4f);
@@ -53,12 +61,20 @@ public class Enemy
 		myBody.getFixtureList().get(0).setUserData(new EnemyFixtureData("enemy", this));
 		count++;
 		
-	}//end contructor
+	}//end constructor
 	
 	public void draw(SpriteBatch batch)
 	{
-		leftImage.setPosition(myBody.getPosition().x-0.7f, myBody.getPosition().y-0.7f);
-		leftImage.draw(batch);
+		if(facingLeft)
+		{
+			leftImage.setPosition(myBody.getPosition().x-0.7f, myBody.getPosition().y-0.7f);
+			leftImage.draw(batch);
+		}
+		else
+		{
+			rightImage.setPosition(myBody.getPosition().x-0.7f, myBody.getPosition().y-0.7f);
+			rightImage.draw(batch);
+		}
 	}
 	
 	public void act(World world)
@@ -74,8 +90,13 @@ public class Enemy
 			
 			bodyDef.type = BodyType.DynamicBody;
 			CircleShape circle = new CircleShape();
-			circle.setRadius(0.5f);
-			bodyDef.position.x = myBody.getPosition().x;
+			circle.setRadius(0.1f);
+			
+			if(!facingLeft)
+				bodyDef.position.x = myBody.getPosition().x+2;
+			else
+				bodyDef.position.x = myBody.getPosition().x-2;
+			
 			bodyDef.position.y = myBody.getPosition().y;
 			fixtureDef.shape = circle;
 			fixtureDef.density = 100f;
@@ -85,8 +106,21 @@ public class Enemy
 			bullet.setFixedRotation(true);
 			bullet.createFixture(fixtureDef);
 			bullet.getFixtureList().get(0).setUserData("enemy_bullet");
+			bullet.setBullet(true);
 			bulletAlive = true;
-			bullet.applyForceToCenter(100000, 0, true);
+			if(!facingLeft)
+				bullet.applyForceToCenter(5000, 0, true);
+			else
+				bullet.applyForceToCenter(-5000, 0, true);
+		}
+		else //the bullet is alive
+		{
+			//if the bullet goes off the screen
+			if(bullet.getPosition().x < -12 || bullet.getPosition().x > 12)
+			{
+				world.destroyBody(bullet);
+				bulletAlive = false;
+			}
 		}
 		/*
 		bullet.setBullet(true);

@@ -230,10 +230,19 @@ public class GamePlay implements Screen{
 	
 	public void addEnemies()
 	{
-		Enemy e = new Enemy(world, -14, 10);
+		Enemy e = new Enemy(world, -14, 15);
 		enemies.add(e);
 		
 		e = new Enemy(world, 14, 10);
+		enemies.add(e);
+		
+		e = new Enemy(world, 5, 3);
+		enemies.add(e);
+		
+		e = new Enemy(world, 1, 1);
+		enemies.add(e);
+		
+		e = new Enemy(world, 11, 20);
 		enemies.add(e);
 	}
 
