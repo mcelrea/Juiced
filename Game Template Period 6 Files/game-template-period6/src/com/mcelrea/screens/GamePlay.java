@@ -91,7 +91,7 @@ public class GamePlay implements Screen{
 		batch.end();
 
 		//show the debug objects on the screen
-		//debugRenderer.render(world, camera.combined);
+		debugRenderer.render(world, camera.combined);
 	}
 
 	@Override

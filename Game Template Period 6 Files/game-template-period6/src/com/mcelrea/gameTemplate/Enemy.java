@@ -24,6 +24,7 @@ public class Enemy
 	private Sprite leftImage, rightImage;
 	
 	Body bullet;
+	boolean bulletAlive;
 	
 	public Enemy(World world, float x, float y)
 	{
@@ -66,22 +67,27 @@ public class Enemy
 		if(grounded && myBody.getLinearVelocity().x < MAXSPEED)
 			myBody.applyLinearImpulse(2, 0, myBody.getPosition().x, myBody.getPosition().y, true);
 		*/
-		BodyDef bodyDef = new BodyDef();
-		FixtureDef fixtureDef = new FixtureDef();
-		
-		bodyDef.type = BodyType.DynamicBody;
-		CircleShape circle = new CircleShape();
-		circle.setRadius(0.5f);
-		bodyDef.position.x = myBody.getPosition().x;
-		bodyDef.position.y = myBody.getPosition().y;
-		fixtureDef.shape = circle;
-		fixtureDef.density = 100f;
-		fixtureDef.restitution = 0;
-		fixtureDef.friction = 0.75f;
-		bullet = world.createBody(bodyDef);
-		bullet.setFixedRotation(true);
-		bullet.createFixture(fixtureDef);
-		bullet.getFixtureList().get(0).setUserData("enemy_bullet");
+		if(!bulletAlive)
+		{
+			BodyDef bodyDef = new BodyDef();
+			FixtureDef fixtureDef = new FixtureDef();
+			
+			bodyDef.type = BodyType.DynamicBody;
+			CircleShape circle = new CircleShape();
+			circle.setRadius(0.5f);
+			bodyDef.position.x = myBody.getPosition().x;
+			bodyDef.position.y = myBody.getPosition().y;
+			fixtureDef.shape = circle;
+			fixtureDef.density = 100f;
+			fixtureDef.restitution = 0;
+			fixtureDef.friction = 0.75f;
+			bullet = world.createBody(bodyDef);
+			bullet.setFixedRotation(true);
+			bullet.createFixture(fixtureDef);
+			bullet.getFixtureList().get(0).setUserData("enemy_bullet");
+			bulletAlive = true;
+			bullet.applyForceToCenter(100000, 0, true);
+		}
 		/*
 		bullet.setBullet(true);
 		*/
