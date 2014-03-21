@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.mcelrea.gameTemplate.Enemy;
 import com.mcelrea.gameTemplate.MyContactFilter;
 import com.mcelrea.gameTemplate.Player;
@@ -26,7 +27,7 @@ import com.mcelrea.gameTemplate.Player;
 public class GamePlay implements Screen{
 
 	//The world class manages all physics entities, dynamic simulation, and asynchronous queries.
-	private World world;
+	public static World world;
 	
 	public static Player player1, player2;
 	Body ladder1, ladder2, ladder3, ladder4;
@@ -44,6 +45,8 @@ public class GamePlay implements Screen{
 	SpriteBatch batch;
 	Sprite ladder1_sprite, ladder2_sprite, ladder3_sprite, ladder4_sprite;
 	Sprite topPlatform, leftPlatform, rightPlatform, ground;
+	
+	public static Array<Body> bullets = new Array<Body>();
 
 	@Override
 	public void render(float delta) {
@@ -114,6 +117,7 @@ public class GamePlay implements Screen{
 		player2.checkCollisions(world);
 		
 		updateEnemies();
+		updateBullets();
 	}
 	
 	public void updateEnemies()
@@ -121,6 +125,31 @@ public class GamePlay implements Screen{
 		for(int i=0; i < enemies.size(); i++)
 		{
 			enemies.get(i).act(world);
+		}
+	}
+	
+	
+	public void updateBullets()
+	{
+		for(int i=0; i < bullets.size; i++)
+		{
+			Body temp = bullets.get(i);
+			System.out.println("x: " + temp.getLinearVelocity().x);
+			System.out.println("y: " + temp.getLinearVelocity().y);
+			if(temp.getPosition().x < -12 || temp.getPosition().x > 12)
+			{
+				world.destroyBody(temp);
+				bullets.removeIndex(i);
+				i--;
+				continue;
+			}
+			if(Math.abs(temp.getLinearVelocity().x) < 0.2 && Math.abs(temp.getLinearVelocity().y) < 0.2)
+			{
+				world.destroyBody(temp);
+				bullets.removeIndex(i);
+				i--;
+			}
+			
 		}
 	}
 	
@@ -230,7 +259,7 @@ public class GamePlay implements Screen{
 	
 	public void addEnemies()
 	{
-		Enemy e = new Enemy(world, -14, 15);
+		Enemy e = new Enemy(world, -14, 10);
 		enemies.add(e);
 		
 		e = new Enemy(world, 14, 10);

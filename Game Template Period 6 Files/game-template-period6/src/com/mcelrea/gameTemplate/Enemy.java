@@ -12,6 +12,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.mcelrea.screens.GamePlay;
 
 public class Enemy 
 {
@@ -24,27 +26,27 @@ public class Enemy
 	private static int count=0;
 	private Sprite leftImage, rightImage;
 	private boolean facingLeft;
-	
-	Body bullet;
+
 	boolean bulletAlive;
-	
+	float shootTime = 0;
+
 	public Enemy(World world, float x, float y)
 	{
 		BodyDef bodyDef = new BodyDef();
 		FixtureDef fixtureDef = new FixtureDef();
-		
+
 		//x = 0 is the middle of the screen
 		if (x < 0)
 			facingLeft = false;
 		else
 			facingLeft = true;
-		
+
 		leftImage = new Sprite(new Texture("img/robot1.png"));
 		leftImage.setSize(1.4f, 1.4f);
 		rightImage = new Sprite(new Texture("img/robot1.png"));
 		rightImage.flip(true, false);
 		rightImage.setSize(1.4f, 1.4f);
-		
+
 		bodyDef.type = BodyType.DynamicBody;
 		PolygonShape box = new PolygonShape();
 		box.setAsBox(0.7f, 0.7f);
@@ -60,9 +62,9 @@ public class Enemy
 		id = count;
 		myBody.getFixtureList().get(0).setUserData(new EnemyFixtureData("enemy", this));
 		count++;
-		
+
 	}//end constructor
-	
+
 	public void draw(SpriteBatch batch)
 	{
 		if(facingLeft)
@@ -76,56 +78,46 @@ public class Enemy
 			rightImage.draw(batch);
 		}
 	}
-	
+
 	public void act(World world)
 	{
-		/*
-		if(grounded && myBody.getLinearVelocity().x < MAXSPEED)
-			myBody.applyLinearImpulse(2, 0, myBody.getPosition().x, myBody.getPosition().y, true);
-		*/
-		if(!bulletAlive)
+		shootTime += Gdx.graphics.getDeltaTime();
+		if(shootTime > 1)
 		{
+			shootTime = 0;
 			BodyDef bodyDef = new BodyDef();
-			FixtureDef fixtureDef = new FixtureDef();
-			
+			FixtureDef fixtureDef = new FixtureDef();		
+
 			bodyDef.type = BodyType.DynamicBody;
 			CircleShape circle = new CircleShape();
 			circle.setRadius(0.1f);
-			
+
 			if(!facingLeft)
 				bodyDef.position.x = myBody.getPosition().x+2;
 			else
 				bodyDef.position.x = myBody.getPosition().x-2;
-			
+
 			bodyDef.position.y = myBody.getPosition().y;
 			fixtureDef.shape = circle;
 			fixtureDef.density = 100f;
 			fixtureDef.restitution = 0;
 			fixtureDef.friction = 0.75f;
-			bullet = world.createBody(bodyDef);
+			Body bullet = world.createBody(bodyDef);
 			bullet.setFixedRotation(true);
 			bullet.createFixture(fixtureDef);
-			bullet.getFixtureList().get(0).setUserData("enemy_bullet");
+			bullet.getFixtureList().get(0).setUserData(new BulletFixtureData("enemy_bullet", this));
 			bullet.setBullet(true);
+			bullet.setGravityScale(0);
 			bulletAlive = true;
 			if(!facingLeft)
-				bullet.applyForceToCenter(5000, 0, true);
+				bullet.applyLinearImpulse(100, 0, bullet.getPosition().x, bullet.getPosition().y, true);//bullet.applyForceToCenter(5000, 0, true);
 			else
-				bullet.applyForceToCenter(-5000, 0, true);
+				bullet.applyLinearImpulse(-100, 0, bullet.getPosition().x, bullet.getPosition().y, true);//bullet.applyForceToCenter(-5000, 0, true);
+
+			GamePlay.bullets.add(bullet);
+			circle.dispose();
 		}
-		else //the bullet is alive
-		{
-			//if the bullet goes off the screen
-			if(bullet.getPosition().x < -12 || bullet.getPosition().x > 12)
-			{
-				world.destroyBody(bullet);
-				bulletAlive = false;
-			}
-		}
-		/*
-		bullet.setBullet(true);
-		*/
-		
+
 	}//end act
 
 	public boolean isGrounded() {
@@ -135,8 +127,17 @@ public class Enemy
 	public void setGrounded(boolean grounded) {
 		this.grounded = grounded;
 	}//end setGrounded
-	
-	
+
+	public boolean isBulletAlive() {
+		return bulletAlive;
+	}
+
+	public void setBulletAlive(boolean bulletAlive) {
+		this.bulletAlive = bulletAlive;
+	}
+
+
+
 }//end Enemy class
 
 
