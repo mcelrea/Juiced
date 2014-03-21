@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -46,6 +48,8 @@ public class GamePlay implements Screen{
 	Sprite ladder1_sprite, ladder2_sprite, ladder3_sprite, ladder4_sprite;
 	Sprite topPlatform, leftPlatform, rightPlatform, ground;
 	
+	ShapeRenderer shapeRenderer;
+	
 	public static Array<Body> bullets = new Array<Body>();
 
 	@Override
@@ -75,6 +79,7 @@ public class GamePlay implements Screen{
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+		
 		topPlatform.draw(batch);
 		leftPlatform.draw(batch);
 		rightPlatform.draw(batch);
@@ -93,6 +98,27 @@ public class GamePlay implements Screen{
 		player2.draw(batch);
 		batch.end();
 
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(1, 0, 0, 1);
+		shapeRenderer.rect(10, 580, player1.getHealth()*2, 15);
+		shapeRenderer.end();
+		
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(1, 1, 1, 1);
+		shapeRenderer.rect(10, 580, 200, 15);
+		shapeRenderer.end();
+		
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(1, 0, 0, 1);
+		shapeRenderer.rect(570, 580, player2.getHealth()*2, 15);
+		shapeRenderer.end();
+		
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.setColor(1, 1, 1, 1);
+		shapeRenderer.rect(570, 580, 200, 15);
+		shapeRenderer.end();
+		
+		
 		//show the debug objects on the screen
 		debugRenderer.render(world, camera.combined);
 	}
@@ -286,6 +312,8 @@ public class GamePlay implements Screen{
 		//create the players in the world at (x,y) location
 		player1 = new Player(world, -10, 1, "img/player1.png");
 		player2 = new Player(world, 10, 1, "img/player2.png");
+		
+		shapeRenderer = new ShapeRenderer();
 		
 		addEnemies();
 		

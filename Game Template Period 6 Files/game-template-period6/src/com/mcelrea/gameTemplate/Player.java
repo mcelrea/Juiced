@@ -26,11 +26,14 @@ public class Player
 	float rot = 0.0f;
 	Sprite rightImage, leftImage;
 	boolean facingLeft;
+	int health;
 
 	public Player(World world, float x, float y, String imageFile)
 	{
 		FixtureDef fixDef = new FixtureDef();
 		BodyDef bodyDef = new BodyDef();
+		
+		health = 100;
 		
 		rightImage = new Sprite(new Texture(imageFile));
 		rightImage.setSize(1f, 2f);
@@ -50,7 +53,8 @@ public class Player
 		fixDef.filter.groupIndex = -1;
 		body = world.createBody(bodyDef);
 		myFixture = body.createFixture(fixDef);
-		body.getFixtureList().get(0).setUserData("player");
+		//body.getFixtureList().get(0).setUserData("player");
+		body.getFixtureList().get(0).setUserData(this);
 		box.dispose();
 		
 		bodyDef.type = BodyType.KinematicBody;
@@ -186,7 +190,19 @@ public class Player
 			jumping = true;
 		}
 	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
 	
+	public void hurt(int damage)
+	{
+		health -= damage;
+	}
 }
 
 

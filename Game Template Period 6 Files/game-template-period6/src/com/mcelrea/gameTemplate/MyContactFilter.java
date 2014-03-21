@@ -12,7 +12,7 @@ public class MyContactFilter implements ContactFilter{
 		/////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////player and player collision///////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////
-		if(fixtureA.getUserData().equals("player") && fixtureB.getUserData().equals("player"))
+		if(fixtureA.getUserData() instanceof Player && fixtureB.getUserData().equals("player"))
 		{
 			return false;
 		}
@@ -25,7 +25,7 @@ public class MyContactFilter implements ContactFilter{
 		/////////////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////player and sword collision//////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////
-		if(fixtureA.getUserData().equals("player") && fixtureB.getUserData().equals("sword"))
+		if(fixtureA.getUserData() instanceof Player && fixtureB.getUserData().equals("sword"))
 		{
 			return false;
 		}
@@ -42,11 +42,11 @@ public class MyContactFilter implements ContactFilter{
 		/////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////player and ladder collision///////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////
-		if(fixtureA.getUserData().equals("ladder") && fixtureB.getUserData().equals("player"))
+		if(fixtureA.getUserData().equals("ladder") && fixtureB.getUserData() instanceof Player)
 		{
 			return false;
 		}
-		if(fixtureA.getUserData().equals("player") && fixtureB.getUserData().equals("ladder"))
+		if(fixtureA.getUserData() instanceof Player && fixtureB.getUserData().equals("ladder"))
 		{
 			return false;
 		}
@@ -59,7 +59,7 @@ public class MyContactFilter implements ContactFilter{
 		/////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////player and wonder box collision///////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////
-		if(fixtureA.getUserData().equals("player") && fixtureB.getUserData().equals("wonder box"))
+		if(fixtureA.getUserData() instanceof Player && fixtureB.getUserData().equals("wonder box"))
 		{
 			//if player1
 			if(fixtureA == GamePlay.player1.getBody().getFixtureList().get(0))
@@ -71,7 +71,7 @@ public class MyContactFilter implements ContactFilter{
 				GamePlay.player2.setJumping(false);
 			}
 		}
-		if(fixtureA.getUserData().equals("wonder box") && fixtureB.getUserData().equals("player"))
+		if(fixtureA.getUserData().equals("wonder box") && fixtureB.getUserData() instanceof Player)
 		{
 			//if player1
 			if(fixtureB == GamePlay.player1.getBody().getFixtureList().get(0))
@@ -93,7 +93,7 @@ public class MyContactFilter implements ContactFilter{
 		/////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////player and ground collision//////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////
-		if(fixtureA.getUserData().equals("player") && fixtureB.getUserData().equals("ground"))
+		if(fixtureA.getUserData() instanceof Player && fixtureB.getUserData().equals("ground"))
 		{
 			//if player1
 			if(fixtureA == GamePlay.player1.getBody().getFixtureList().get(0))
@@ -109,7 +109,7 @@ public class MyContactFilter implements ContactFilter{
 			if(fixtureA.getBody().getLinearVelocity().y > 0)
 				return false;
 		}
-		if(fixtureA.getUserData().equals("ground") && fixtureB.getUserData().equals("player"))
+		if(fixtureA.getUserData().equals("ground") && fixtureB.getUserData() instanceof Player)
 		{
 			//if player1
 			if(fixtureB == GamePlay.player1.getBody().getFixtureList().get(0))
@@ -238,11 +238,17 @@ public class MyContactFilter implements ContactFilter{
 		/////////////////////////////////////////////////////////////////////////////////////////
 		if(fixtureA.getUserData() instanceof BulletFixtureData)
 		{
-			((BulletFixtureData)fixtureA.getUserData()).enemy.setBulletAlive(false);
+			if(fixtureB.getUserData() instanceof Player)
+			{
+				((Player)fixtureB.getUserData()).hurt(1);
+			}
 		}
 		if(fixtureB.getUserData() instanceof BulletFixtureData)
 		{
-			((BulletFixtureData)fixtureB.getUserData()).enemy.setBulletAlive(false);
+			if(fixtureA.getUserData() instanceof Player)
+			{
+				((Player)fixtureA.getUserData()).hurt(1);
+			}
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////end enemy bullet collision////////////////////////////////////
